@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>WhiskeySaml</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      background-color: #f5f5f5;
+    }
+
+    .form-ws {
+      width: 100%;
+      max-width: 550px;
+      padding: 15px;
+      margin: auto;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <main class="form-ws" style="margin-top: -1px;">
+
+    <form id="myForm" method="POST" action="/attack">
+
+      <div>
+
+        <div style="width: 100%; display: table;">
+          <div style="display: table-row; height: 100px;">
+            <div style="width: 50%; display: table-cell; text-align: center;">
+              <h1>WhiskeySAML</h1>
+              <h2>Golden SAML Attack Framework</h2>
+
+              <p><b>Add Your Ingredients and Click Submit</b></p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+
+          <!-- Required Options -->
+          <div class="form-floating" style="margin-bottom: 15px;">
+            <label for="target_user" class="form-label">
+              Target User: <span style="color: red;">*</span>
+            </label><br>
+            <small id="target_user_help" class="form-text text-muted">
+              Target user to impersonate and authenticate to Office with.
+            </small>
+            <input type="text" id="target_user" name="target_user" class="form-control" placeholder="" required>
+          </div>
+
+          <div class="form-floating" style="margin-bottom: 15px;">
+            <label for="domain" class="form-label">
+              Domain: <span style="color: red;">*</span>
+            </label><br>
+            <small id="domain_help" class="form-text text-muted">
+              Target domain we are attacking (i.e. domain.com).
+            </small>
+            <input type="text" id="domain" name="domain" class="form-control" placeholder="" required>
+          </div>
+
+          <div class="form-floating" style="margin-bottom: 15px;">
+            <label for="adfs_host" class="form-label">
+              ADFS Server IP Address: <span style="color: red;">*</span>
+            </label><br>
+            <small id="adfs_host_help" class="form-text text-muted">
+              Target ADFS system - an IP address is required as the FQDN will cause problems.
+            </small>
+            <input type="text" id="adfs_host" name="adfs_host" class="form-control" placeholder="" required>
+          </div>
+
+          <div class="form-floating" style="margin-bottom: 15px;">
+            <label for="dc_ip" class="form-label">
+              DC Server IP Address: <span style="color: red;">*</span>
+            </label><br>
+            <small id="dc_ip_help" class="form-text text-muted">
+              Target DC system to run DCSync and query LDAP for target user information - an
+              IP address is required as the FQDN will cause problems.
+            </small>
+            <input type="text" id="dc_ip" name="dc_ip" class="form-control" required>
+          </div>
+
+          <div class="form-floating" style="margin-bottom: 15px;">
+            <label for="domain_username" class="form-label">
+              Domain Username: <span style="color: red;">*</span>
+            </label><br>
+            <small id="domain_username_help" class="form-text text-muted">
+              Username for authenticating during DCSync and LDAP queries against the Domain Controller.
+            </small>
+            <input type="text" id="domain_username" name="domain_username" class="form-control" required>
+          </div>
+
+          <div class="form-floating" style="margin-bottom: 15px;">
+            <label for="domain_password" class="form-label">
+              Domain Password: <span style="color: red;">*</span>
+            </label><br>
+            <small id="domain_password_help" class="form-text text-muted">
+              Password for authenticating during DCSync and LDAP queries against the Domain Controller.
+            </small>
+            <input type="password" id="domain_password" name="domain_password" class="form-control" required>
+          </div>
+
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+          <p class="mt-5 mb-3 text-muted" style="margin-top: 10px;">Secureworks &copy; 2021</p>
+        </div>
+
+    </form>
+  </main>
+</body>
+
+</html>

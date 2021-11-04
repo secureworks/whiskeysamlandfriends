@@ -1,0 +1,60 @@
+<html>
+
+<head>
+  <title>WhiskeySaml</title>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <form class="container" action="https://login.microsoftonline.com:443/login.srf" method="post">
+      <input type="hidden" name="wa" value="wsignin1.0" />
+      <input type="hidden" id="saml" name="wresult" value="{{ token }}" /></td>
+      <!--
+        The wctx value here redirects us directly to portal.azure.com.
+        Without it - we are directed to portal.office.com.
+       -->
+      <input type="hidden" id="portal_code" name="wctx"
+        value="LoginOptions=3&estsredirect=2&estsrequest=rQIIAY2TTYjjdBjGJ9OZ7szA4iCLeBHmsIgsJM3HP_0YXDRt0yZt03TS9CO9lHz8k_7zvUmmSXMQ9ORxz4IeRC-DXjyJInheEFb0tEcviqdlT3tR7Cx4X3h54IXngRfe33N2hyUYgiTIBxWaIC_vmwAYgGwyOGMYJA5aJoUboGHhrQaALGMals2YgypLUoAhkzfPzn_57cj96f18-M0n_3rg648_usHe3WRZnF7WanGUZLpP6OV1AgkzCmopckIU1lBowaL2PYY9xbC_MOzmMK0zjTpJ0yRLN1i2BdgWS0iqyGilRsldLVu5PVfukOS4q_gjdROsXCdbdflipYqFVkq0thCplWsCqT9jNFXL5MWsvPVrruWOFgNfUp1M7jrMquvstFJkpHKOnh2-IXPX2Ya-lShBJXxxeGpHSbCOozT7rPJnRY5hKFqdKAyhmRG3NhhmyNQzFIWTJIphkiGYPpxu6YXauQJD3s3DuhbrDTTLcXm8xYfLPGogFK_8xOfDpbHki9ZwOt4qszbahr0haDebjsCKO1FaehmeXcltVumiAI-HPcpq0UO7nPdXs814sl16caikuiRcgWYarEx_vIBhp20iKmh5tmB0tlzcSO0R7uB50tSuC8GRRjqQKE_WPSeqM6ZgtPHOWoxS4PnU1CsVgzc0ySEdpEzoSSIUksZMFTufb6YBOwbcRrbDgpsgPhO2TXbRpGPafGRo05EInPXc62xbdFykG8hbVGb2gjIeq7LcI7vSLk_6Qw2FLMDDYlGIgMmM0aMlN3CXQms8bxSGPeuPryiRt_1klE9iZ0cOlITTOSs34dhJhmafx42s3tOa-XrQdKDf5C0zFvBoGfa3BpeuzZY2hxwt8xNfnNBAD5BHdaKZpAY5o2RreoWChdt3FGptx6nsTpY8aI92TivOZR8G-o7xFraYdziEhhS4qdz_H9hAD3UHBvs373HdM5vvSY3ylAhhVvuucjdKHD1E5SsA0ieV0evEatcpTNYo2NOSRuGr6MUenRBZF_tLkH8RJ5GNfPhH5Z10k0DvQxtaRKxb1i4lLD3xTD-6togAPj3C_j566-T4vPL2wcXBe_fIyuXJydn5we328gj78nhfxa9enD94_vs_wy9-_eDbz3_MD58c1xqxquhcrSaQDSVr90YpkLsCVBNg7wZCIkKX3sqWuHTERHpIXVKPq9jjavVJ9VTsrse8CurU8yr26Z2DH05fs9TPzu7RJE3hZB2n2QuKvqT301j9fPfgPw2" />
+      </td>
+      <div class="card" style="margin-top: 10px;">
+
+        <div class="card-header text-center">
+          <h2>Proceed to Office 365</h2>
+        </div>
+
+        <div class="card-body">
+
+          <div class="card-text">
+            <div style="width: 100%; display: table;">
+              <div style="display: table-row; height: 100px;">
+                <div style="display: table-cell">
+                  <p style="margin-left: 10px; text-align: center;">
+                    Press the "Proceed" button to pass the Golden SAML to Office to
+                    continue authenticating.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer text-center">
+          <button type="submit" class="btn btn-danger">Proceed</button>
+        </div>
+
+      </div>
+
+    </form>
+
+  </div>
+</body>
+
+</html>

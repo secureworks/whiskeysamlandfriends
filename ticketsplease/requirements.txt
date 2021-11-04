@@ -1,0 +1,11 @@
+    bs4
+    impacket
+    lxml
+    ldap3
+    pyasn1
+    pycryptodome
+    pypykatz
+    requests
+    signxml
+    wmi-client-wrapper-py3
+    git+https://github.com/dmb2168/cryptography
