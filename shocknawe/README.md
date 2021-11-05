@@ -11,39 +11,47 @@ This is a proof of concept tool to generate a Golden SAML token that will be use
 ```
 usage: shocknawe.py [-h] --target-user TARGET_USER --domain DOMAIN --adfs-host ADFS_HOST
                     --dc-ip DC_IP --domain-username DOMAIN_USERNAME
-                    --domain-password DOMAIN_PASSWORD [--rate RATE] [--debug]
+                    --domain-password DOMAIN_PASSWORD
+                    --adfs-account ADFS_ACCOUNT [--rate RATE] --command COMMAND
+                    [--debug]
 
 Shock N' Awe: Deploy a Payload to an Azure Subscription | v0.1.0
 
 optional arguments:
   -h, --help            show this help message and exit
 
+
   --target-user TARGET_USER
                         Target Cloud User username
 
+
   --domain DOMAIN       Target Domain
+
 
   --adfs-host ADFS_HOST
                         Target ADFS Server
 
+
   --dc-ip DC_IP         Target Domain Controller
 
+
   --domain-username DOMAIN_USERNAME
-                        Domain Username for DCSync
+                        Domain Username for DCSync/LDAP operations
+
 
   --domain-password DOMAIN_PASSWORD
-                        Password for Domain Username
+                        Password for Domain Username for DCSync/LDAP operations
 
-  --rate RATE           Number of threads to run concurrently.
-                        Default: 5
 
-  --malicious-host MALICIOUS_HOST
-                        IP address/domain name of the malicious server hosting payloads
+  --adfs-account ADFS_ACCOUNT
+                        ADFS Service Account Name or Local Admin Account Name of the ADFS Server
 
-  --payload-name PAYLOAD_NAME
-                        Name of remote payload file
+
+  --rate RATE           Number of threads to run concurrently. Default: 5
+
 
   --command COMMAND     Command to be run on the victim system(s)
+
 
   --debug               Enable debugging
 ```

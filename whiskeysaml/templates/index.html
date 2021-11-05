@@ -129,10 +129,19 @@
             <input type="password" id="domain_password" name="domain_password" class="form-control" required>
           </div>
 
+          <div class="form-floating" style="margin-bottom: 15px;">
+            <label for="service_account" class="form-label">
+              ADFS Service Account Or ADFS Local Admin: <span style="color: red;">*</span>
+            </label><br>
+            <small id="service_account_help" class="form-text text-muted">
+              Name of the ADFS service account or Local Admin
+            </small>
+            <input type="text" id="service_account" name="service_account" class="form-control" required>
+          </div>
+
           <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
           <p class="mt-5 mb-3 text-muted" style="margin-top: 10px;">Secureworks &copy; 2021</p>
         </div>
-
     </form>
   </main>
 </body>

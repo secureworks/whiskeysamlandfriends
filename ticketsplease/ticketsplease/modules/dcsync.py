@@ -16,7 +16,7 @@ import logging
 import asyncio
 from typing import Tuple
 from pypykatz.smb.dcsync import dcsync  # type: ignore
-from ticketsplease.core.utils import gen_nt_hash
+from ticketsplease.core import gen_nt_hash
 
 
 class DCSYNC:

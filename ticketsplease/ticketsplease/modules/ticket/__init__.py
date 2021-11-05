@@ -20,7 +20,7 @@ import base64
 import asyncio
 from typing import Tuple
 from pyasn1.codec.der import encoder  # type: ignore
-from ticketsplease.core.utils import gen_nt_hash
+from ticketsplease.core import gen_nt_hash
 from ticketsplease.modules.ldap import LDAP
 from ticketsplease.modules.dcsync import DCSYNC
 
