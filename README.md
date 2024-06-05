@@ -11,3 +11,7 @@
 ## ShockNAwe
 
 [ShockNAwe](shocknawe/): Proof of concept tool to generate a Golden SAML token that will be used to request an Access Token from Azure Core Management which will then be used to enumerate and attack the virtual machines within the Azure subscription.
+
+## DirectWave
+
+[DirectWave](directwave/): Proof of concept tool to enumerate and execute commands on all Azure tenant Virual Machines when an Azure Core Management Access Token is supplied by the tool operator.
